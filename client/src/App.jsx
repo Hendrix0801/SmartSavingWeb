@@ -7,6 +7,7 @@ import AddTransaction from './pages/AddTransaction';
 import Expenses from './pages/Expenses';
 import Income from './pages/Income';
 import Stats from './pages/Stats';
+import Reports from './pages/Reports';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="expenses" element={<Expenses />} />
         <Route path="income" element={<Income />} />
         <Route path="stats" element={<Stats />} />
+        <Route path="reports" element={<Reports />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
