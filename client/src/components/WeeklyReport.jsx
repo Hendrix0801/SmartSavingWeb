@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { DAYS, CAT_ICONS, DEFAULT_ICON } from '../utils/icons';
 
 function Highlight({ icon, text, type }) {
@@ -109,7 +109,7 @@ export default function WeeklyReport({ transactions }) {
             <YAxis hide domain={[0, 'dataMax']} />
             <Tooltip formatter={v => [`¥${v.toFixed(0)}`, '支出']} contentStyle={{ fontSize: 12, borderRadius: 8 }} />
             <Bar dataKey="amount" radius={[3, 3, 0, 0]} maxBarSize={24}>
-              {report.dailyData.map((d, i) => <rect key={i} fill={d.amount > report.dailyAvg * 1.5 ? '#ff3b30' : '#007aff'} />)}
+              {report.dailyData.map((d, i) => <Cell key={i} fill={d.amount > report.dailyAvg * 1.5 ? '#ff3b30' : '#007aff'} />)}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
