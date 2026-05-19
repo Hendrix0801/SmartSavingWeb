@@ -1,26 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../context/AuthContext';
+import HealthScoreCard from '../components/HealthScoreCard';
 
 const PIE_COLORS = ['#ff3b30', '#e5e5ea'];
-
-function healthGrade(score) {
-  if (score >= 90) return { grade: 'A+', label: '优秀', color: '#34c759', emoji: '🌟' };
-  if (score >= 80) return { grade: 'A', label: '良好', color: '#34c759', emoji: '👍' };
-  if (score >= 70) return { grade: 'B', label: '不错', color: '#007aff', emoji: '👌' };
-  if (score >= 60) return { grade: 'C', label: '及格', color: '#ff9500', emoji: '💪' };
-  if (score >= 40) return { grade: 'D', label: '注意', color: '#ff9500', emoji: '⚠️' };
-  return { grade: 'F', label: '改善', color: '#ff3b30', emoji: '🔴' };
-}
-
-const SCALE = [
-  { min: 90, grade: 'A+', label: '优秀' },
-  { min: 80, grade: 'A', label: '良好' },
-  { min: 70, grade: 'B', label: '不错' },
-  { min: 60, grade: 'C', label: '及格' },
-  { min: 40, grade: 'D', label: '注意' },
-  { min: 0, grade: 'F', label: '改善' },
-];
 
 function getBudgetStatus(stats) {
   const { monthlySalary, totalIncome, savingTarget, totalExpense, totalDays, isCurrentMonth } = stats || {};
@@ -256,35 +239,12 @@ export default function Budget() {
       {insights && (
         <div className="section">
           <div className="section-header">消费健康</div>
-          {(() => {
-            const g = healthGrade(insights.healthScore);
-            return (
-              <div className="health-score-row">
-                <div className="health-score-circle" style={{ background: `linear-gradient(135deg, ${g.color}, ${g.color}dd)` }}>
-                  <span className="health-score-num">{insights.healthScore}</span>
-                  <span className="health-score-label">{g.grade}</span>
-                </div>
-                <div className="health-score-info">
-                  <div className="health-grade-label">{g.emoji} {g.label}</div>
-                  <div className="health-score-bar-track">
-                    <div className="health-score-bar-fill" style={{ width: insights.healthScore + '%' }} />
-                  </div>
-                  <div className="health-score-tags">
-                    <span>储蓄率 {insights.monthlyOverview ? (insights.monthlyOverview.netAmount / insights.monthlyOverview.totalIncome * 100).toFixed(0) : 0}%</span>
-                    <span>弹性 {insights.fixedVsFlex ? (insights.fixedVsFlex.flexRatio * 100).toFixed(0) : 0}%</span>
-                    <span>笔均 ¥{insights.txnSizeAnalysis?.avg.toFixed(0) || 0}</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-          <div className="health-scale">
-            {SCALE.map(s => (
-              <span key={s.grade} className={`health-scale-item ${insights.healthScore >= s.min ? 'active' : ''}`}>
-                {s.grade} {s.label}
-              </span>
-            ))}
-          </div>
+          <HealthScoreCard
+            score={insights.healthScore}
+            savingsRate={insights.monthlyOverview ? (insights.monthlyOverview.netAmount / insights.monthlyOverview.totalIncome * 100).toFixed(0) : 0}
+            flexRatio={insights.fixedVsFlex ? (insights.fixedVsFlex.flexRatio * 100).toFixed(0) : 0}
+            avgAmount={insights.txnSizeAnalysis?.avg.toFixed(0) || 0}
+          />
           {insights.fixedVsFlex && (
             <div className="flex-breakdown">
               <div className="flex-bar-track">
