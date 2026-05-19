@@ -4,3 +4,5 @@ client/dist/
 .DS_Store
 *.log
 .env
+server/seed-*.js
+server/analyze.js
